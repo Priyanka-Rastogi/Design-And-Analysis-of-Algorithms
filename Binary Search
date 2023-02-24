@@ -1,0 +1,33 @@
+#include<iostream>
+using namespace std;
+int binarySearch(int arr[], int low, int high, int key) {
+   if (low <= high) {
+      int mid = (low + high)/2;
+      if (arr[mid] == key)
+         return mid ;
+      if (arr[mid] > key)
+         return binarySearch(arr, low, mid-1, key);
+      if (arr[mid] < key)
+         return binarySearch(arr, mid+1, high, key);
+   }
+   return -1;
+}
+int main() {
+   int N,key;
+   cout<<"Enter the number of element you want in your array:"<<endl;
+   cin>>N;
+   int arr[N]; 
+   cout<<"Array elements are:";
+   for(int i=0;i<N;i++){
+       cin>>arr[i];
+   }
+   cout << "Enter the number to search: \n";
+   cin >> key;
+   int result = binarySearch (arr, 0, N-1, key);
+   if(result== -1){
+      cout<< key <<" is not present in the array";
+   }else{
+      cout<< key <<" is present at index "<< result <<" in the array";
+   }
+   return 0;
+}
