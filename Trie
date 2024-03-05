@@ -1,0 +1,179 @@
+
+/* ------------------------Implementation of Trie----------------------- */
+
+#include <bits/stdc++.h>
+#include<string.h>
+using namespace std;
+
+class TrieNode
+{
+public:
+  char data;
+  TrieNode *children[26];	// each index of this array is mapped with the corrosponding character i.e 0->A, 1->B, 2->C .....
+  bool isTerminal;
+
+  // Constructor.
+
+    TrieNode (char ch)
+  {
+    data = ch;
+    for (int i = 0; i < 26; i++)
+      {
+	children[i] = NULL;
+      }
+    isTerminal = false;
+  }
+};
+
+class Trie
+{
+public:
+  TrieNode * root;
+
+  // Constructor.
+  Trie ()
+  {
+    root = new TrieNode ('\0');
+  }
+
+  // inserting a char with the help of recursion.
+
+  void insertUtil (TrieNode * root, string word)
+  {
+
+    // base case.
+
+    if (word.length () == 0)	// all the characters of a word are inserted.
+      {
+	root->isTerminal = true;	// now make the last character as the terminal node.
+	return;
+      }
+
+    // now 2 cases:- either the character to insert is already present in the try or it is not present.
+
+    TrieNode *childNode;
+    int index = word[0] - 'A';	// finding the index of the character to insert.                       ****(Assuming word will be in Upper case)-> focus.
+
+    // Case1:- Present--->> just move forward and do nothing.
+
+    if (root->children[index] != NULL)
+      {
+	childNode = root->children[index];
+      }
+
+    // Case2:- Absent--->> make a new node containing the character to insert and push it into the trie.
+
+    else
+      {
+	childNode = new TrieNode (word[0]);
+	root->children[index] = childNode;
+      }
+
+    // Now one case solved and baki ka recursion handle krr laga.
+
+    insertUtil (childNode, word.substr (1));	// Recursive Call.
+  }
+  /*-----------------------------Operation1:- Function for Inserting Word to Trie----------------------------------*/
+
+  void insertWord (string word)
+  {
+    insertUtil (root, word);
+  }
+
+  /*----------------------------Operation2:- Function to search a word in Trie--------------------------------------*/
+
+  bool searchUtil (TrieNode * root, string word)
+  {
+    // base case.
+
+    if (word.length () == 0)
+      {				// word traversed completely, so return if last character is terminal node or not.
+	return root->isTerminal;
+      }
+
+    int index = word[0] - 'A';
+    TrieNode *childNode;
+
+    // case1:- If the character is already present in the trie then just move forward and search for the next character of the word.
+
+    if (root->children[index] != NULL)
+      childNode = root->children[index];
+
+    // Case2:- If character is not present then return false.
+
+    else
+
+      return false;
+
+    // One case solved baki recursion will handle.
+
+    return searchUtil (childNode, word.substr (1));	// Recursive call.
+
+  }
+  
+  
+
+  // Function to search a word in the Trie.
+
+  bool searchWord (string word)
+  {
+    return searchUtil (root, word);
+  }
+
+   /*-------------------------------------Operation3:- Function to find whether a particular prefix is present in the Trie or not.---------------------------*/
+
+  bool PrefixUtil (TrieNode * root, string word)
+  {
+    // base case.
+
+    if (word.length () == 0)
+      {				// word traversed completely, so return if last
+	// character is terminal node or not.
+	return true;
+      }
+
+    int index = word[0] - 'A';
+    TrieNode *childNode;
+
+    // case1:- If the character is already present in the trie then just move  forward and search for the next character of the word.
+               
+
+    if (root->children[index] != NULL)
+      childNode = root->children[index];
+
+    // Case2:- If character is not present then return false.
+
+    else
+
+      return false;
+
+    return PrefixUtil (childNode, word.substr (1));
+  }
+  
+  
+  
+  
+  // Function to search for a particular prefix in the Trie.
+  
+  bool startsWith (string prefix)
+  {
+    return PrefixUtil (root, prefix);
+  }
+
+
+};
+
+int
+main ()
+{
+  Trie *t = new Trie ();
+  t->insertWord ("ARM");
+  t->insertWord ("TIME");
+
+  cout << "Present or not" << "-->" << t->searchWord ("TIME") << endl;
+  cout << "Present or not" << "-->" << t->searchWord ("ARM") << endl;
+  cout << "Present or not" << "-->" << t->startsWith ("TI") << endl;
+  return 0;
+}
+
+
