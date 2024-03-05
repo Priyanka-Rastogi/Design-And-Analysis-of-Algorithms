@@ -1,0 +1,88 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class Heap {
+private:
+    vector<int> heap;
+    bool isMinHeap;
+
+    void heapifyUp(int index) {
+        if (index <= 0)
+            return;
+
+        int parent = (index - 1) / 2;
+        if ((isMinHeap && heap[index] < heap[parent]) ||
+            (!isMinHeap && heap[index] > heap[parent])) {
+            swap(heap[index], heap[parent]);
+            heapifyUp(parent);
+        }
+    }
+
+    void heapifyDown(int index) {
+        int left = 2 * index + 1;
+        int right = 2 * index + 2;
+        int largestOrSmallest = index;
+
+        if (left < heap.size() && ((isMinHeap && heap[left] < heap[largestOrSmallest]) || (!isMinHeap && heap[left] > heap[largestOrSmallest])))
+            largestOrSmallest = left;
+        if (right < heap.size() && ((isMinHeap && heap[right] < heap[largestOrSmallest]) || (!isMinHeap && heap[right] > heap[largestOrSmallest])))
+            largestOrSmallest = right;
+
+        if (largestOrSmallest != index) {
+            swap(heap[index], heap[largestOrSmallest]);
+            heapifyDown(largestOrSmallest);
+        }
+    }
+
+public:
+    Heap(bool isMin) : isMinHeap(isMin) {}
+
+    void insert(int value) {
+        heap.push_back(value);
+        heapifyUp(heap.size() - 1);
+    }
+
+    int getTop() {
+        if (heap.empty())
+            return -1;
+        return heap[0];
+    }
+
+    void deleteTop() {
+        if (heap.empty())
+            return;
+        heap[0] = heap.back();
+        heap.pop_back();
+        heapifyDown(0);
+    }
+
+    bool isEmpty() {
+        return heap.empty();
+    }
+};
+
+int main() {
+    Heap minHeap(true);
+    minHeap.insert(3);
+    minHeap.insert(2);
+    minHeap.insert(1);
+
+    cout << "Min Heap Top: " << minHeap.getTop() << endl; // Output: 1
+
+    minHeap.deleteTop();
+    cout << "Min Heap Top after deletion: " << minHeap.getTop() << endl; // Output: 2
+
+    Heap maxHeap(false);
+    maxHeap.insert(1);
+    maxHeap.insert(2);
+    maxHeap.insert(3);
+
+    cout << "Max Heap Top: " << maxHeap.getTop() << endl; // Output: 3
+
+    maxHeap.deleteTop();
+    cout << "Max Heap Top after deletion: " << maxHeap.getTop() << endl; // Output: 2
+
+    return 0;
+}
+
