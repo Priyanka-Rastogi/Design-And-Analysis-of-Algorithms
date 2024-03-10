@@ -1,0 +1,57 @@
+#include <iostream>
+#include <vector>
+#include <deque>
+#include<list>
+using namespace std;
+
+vector<int> maxOfSubarraysOfSizeK(vector<int>& arr, int k) {
+    int i=0,j=0;
+    int size=arr.size();
+    list <int> ls;
+    vector<int>ans;
+    while(j<size){
+        while(ls.size()>0 && ls.back()<arr[j]){
+            ls.pop_back();
+        }
+        ls.push_back(arr[j]);
+        if(j-i+1 < k){
+            j++;
+        }
+        if(j-i+1 == k){
+            ans.push_back(ls.front());
+            if(ls.front()==arr[i]){
+                ls.pop_front();
+            }
+            i++;
+            j++;
+        }
+        
+    }
+    return ans;
+}
+
+int main() {
+    int n, k;
+
+    cout << "Enter the size of the array: ";
+    cin >> n;
+
+    vector<int> arr(n);
+    cout << "Enter the array elements: ";
+    for (int i = 0; i < n; ++i) {
+        cin >> arr[i];
+    }
+
+    cout << "Enter the size of the subarray (k): ";
+    cin >> k;
+
+    vector<int> result = maxOfSubarraysOfSizeK(arr, k);
+
+    cout << "Maximum elements of all subarrays of size " << k << " are: ";
+    for (int num : result) {
+        cout << num << " ";
+    }
+    cout << endl;
+
+    return 0;
+}
